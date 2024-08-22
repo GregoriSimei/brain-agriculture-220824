@@ -1,0 +1,32 @@
+services:
+  app:
+    build: .
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/home/node/app
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:latest
+    restart: unless-stopped
+    ports:
+      - ${DB_POSTGRES_PORT:-5432}:5432
+    environment:
+      POSTGRES_USER: ${DB_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${DB_POSTGRES_PASS}
+      POSTGRES_DB: ${DB_POSTGRES_NAME}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+    volumes:
+      - db:/var/lib/postgresql/data
+
+volumes:
+  db:
+    driver: local
