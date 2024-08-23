@@ -12,13 +12,13 @@ services:
   db:
     image: postgres:latest
     ports:
-      - "${DB_POSTGRES_PORT}:5432"
+      - "${DB_PORT}:5432"
     environment:
-      POSTGRES_DB: ${DB_POSTGRES_DATABASE}
-      POSTGRES_USER: ${DB_POSTGRES_USER}
-      POSTGRES_PASSWORD: ${DB_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_POSTGRES_USER} -d ${DB_POSTGRES_DATABASE}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_DATABASE}"]
       interval: 10s
       retries: 5
       start_period: 30s
