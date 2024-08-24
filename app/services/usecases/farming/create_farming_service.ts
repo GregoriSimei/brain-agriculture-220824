@@ -35,12 +35,12 @@ export class CreateFarmingUseCase implements CreateFarmingUseCase {
     const farmFound = await this.farmRepository.findById(farmId)
     if (!farmFound) throw new BadRequestException('farm not found')
 
+    const { vegetationArea, area: farmArea } = farmFound
+    if (vegetationArea + area > farmArea) throw new BadRequestException('Invalid area')
+
     const farmingTypeFound = await this.farmingTypeRepository.findByName(name)
     const farmingTypeToWork =
       farmingTypeFound || (await this.farmingTypeRepository.create({ name }))
-
-    const { vegetationArea, area: farmArea } = farmFound
-    if (vegetationArea + area > farmArea) throw new BadRequestException('Invalid area')
 
     const farmingToCreate: Partial<Farming> = {
       farmingTypeId: farmingTypeToWork.id,
