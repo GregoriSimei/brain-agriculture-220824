@@ -15,6 +15,7 @@ const UpdateProducersController = () => import('#controllers/producer/update_pro
 const AddProducerToFarmsController = () =>
   import('#controllers/farm/add_producer_to_farms_controller')
 const CreateFarmingsController = () => import('#controllers/farming/create_farmings_controller')
+const FarmDashDataController = () => import('#controllers/farmDash/farm_dash_data_controller')
 import router from '@adonisjs/core/services/router'
 
 router.get('/', async () => {
@@ -30,6 +31,7 @@ router.post('/users', [CreateUsersController, 'handle'])
 router.post('/farms', [CreateFarmsController, 'handle'])
 router.put('/farms/:farm_id/producers', [AddProducerToFarmsController, 'handle'])
 router.post('/farms/:farm_id/farmings', [CreateFarmingsController, 'handle'])
+router.get('/farms/dashes', [FarmDashDataController, 'handle'])
 
 // Producers
 router.post('/producers', [CreateProducersController, 'handle'])

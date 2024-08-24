@@ -7,6 +7,7 @@ export interface FarmRepository {
   findByCNPJ(cnpj: string): Promise<Farm | null>
   findById(id: number, populate?: boolean): Promise<Farm | null>
   addProducerToFarm(farm: Farm, producer: Producer): Promise<void>
+  findAll(populate?: boolean): Promise<Farm[]>
 }
 
 @inject()
@@ -48,5 +49,17 @@ export class FarmRepository implements FarmRepository {
   async addProducerToFarm(farm: Farm, producer: Producer): Promise<void> {
     const farmFound = await this.farmModel.findBy('id', farm.id)
     await farmFound?.related('producers').attach([producer.id])
+  }
+
+  async findAll(populate = false): Promise<Farm[]> {
+    if (populate)
+      return await this.farmModel
+        .query()
+        .preload('city', (query) => query.preload('state'))
+        .preload('farmings', (query) => query.preload('farmingType'))
+        .preload('person')
+        .preload('producers', (query) => query.preload('person'))
+
+    return this.farmModel.query()
   }
 }
