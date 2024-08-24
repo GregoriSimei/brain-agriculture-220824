@@ -10,6 +10,7 @@
 const CreateFarmsController = () => import('#controllers/farm/create_farms_controller')
 const CreateUsersController = () => import('#controllers/users/create_users_controller')
 const CreateProducersController = () => import('#controllers/producer/create_producers_controller')
+const DeleteProducersController = () => import('#controllers/producer/delete_producers_controller')
 import router from '@adonisjs/core/services/router'
 
 router.get('/', async () => {
@@ -20,4 +21,6 @@ router.get('/', async () => {
 
 router.post('/users', [CreateUsersController, 'handle'])
 router.post('/farms', [CreateFarmsController, 'handle'])
+
 router.post('/producers', [CreateProducersController, 'handle'])
+router.delete('/producers/:producer_id', [DeleteProducersController, 'handle'])
