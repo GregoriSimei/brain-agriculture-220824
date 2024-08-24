@@ -40,6 +40,7 @@ export class CreateFarmUseCase implements CreateFarmUseCase {
     state,
   }: CreateFarmUseCaseRequest): Promise<CreateFarmUseCaseResponse> {
     if (!this.validateCNPJ(cnpj)) throw new BadRequestException('Invalid CNPJ')
+    if (vegetationArea > area) throw new BadRequestException('Invalid vegetation area')
 
     const stateFound = await this.stateRepository.findByName(state)
     const stateFarm = !stateFound ? await this.stateRepository.create({ name: state }) : stateFound
