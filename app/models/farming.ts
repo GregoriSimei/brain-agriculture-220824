@@ -11,8 +11,14 @@ export default class Farming extends BaseModel {
   @column()
   declare area: number
 
+  @column({ columnName: 'farming_type_id' })
+  declare farmingTypeId: number
+
   @belongsTo(() => FarmingType)
   declare farmingType: BelongsTo<typeof FarmingType>
+
+  @column({ columnName: 'farm_id' })
+  declare farmId: number
 
   @belongsTo(() => Farm)
   declare farm: BelongsTo<typeof Farm>

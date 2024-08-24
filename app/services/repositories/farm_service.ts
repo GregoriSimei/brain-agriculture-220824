@@ -5,7 +5,7 @@ import { inject } from '@adonisjs/core'
 export interface FarmRepository {
   create(farm: Partial<Farm>): Promise<Farm>
   findByCNPJ(cnpj: string): Promise<Farm | null>
-  findById(id: number): Promise<Farm | null>
+  findById(id: number, populate?: boolean): Promise<Farm | null>
   addProducerToFarm(farm: Farm, producer: Producer): Promise<void>
 }
 
@@ -32,7 +32,16 @@ export class FarmRepository implements FarmRepository {
     return result
   }
 
-  async findById(id: number): Promise<Farm | null> {
+  async findById(id: number, populate = false): Promise<Farm | null> {
+    if (populate)
+      return await this.farmModel
+        .query()
+        .preload('city')
+        .preload('farmings')
+        .preload('person')
+        .preload('producers')
+        .where('id', id)
+        .first()
     return await this.farmModel.findBy('id', id)
   }
 
