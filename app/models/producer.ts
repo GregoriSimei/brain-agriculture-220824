@@ -11,6 +11,9 @@ export default class Producer extends BaseModel {
   @manyToMany(() => Farm)
   declare farms: ManyToMany<typeof Farm>
 
+  @column({ columnName: 'person_id' })
+  declare personId: number
+
   @belongsTo(() => Person)
   declare person: BelongsTo<typeof Person>
 
