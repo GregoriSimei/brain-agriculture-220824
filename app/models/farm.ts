@@ -16,6 +16,9 @@ export default class Farm extends BaseModel {
   @column({ columnName: 'vegetation_area' })
   declare vegetationArea: number
 
+  @column({ columnName: 'person_id' })
+  declare personId: number
+
   @belongsTo(() => Person)
   declare person: BelongsTo<typeof Person>
 

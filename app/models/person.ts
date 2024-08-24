@@ -14,6 +14,9 @@ export default class Person extends BaseModel {
   @column()
   declare type: 'CPF' | 'CNPJ'
 
+  @column()
+  declare document: string
+
   @hasOne(() => Producer)
   declare producer: HasOne<typeof Producer>
 
