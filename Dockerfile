@@ -7,4 +7,4 @@ WORKDIR /home/node/app
 
 USER node
 
-CMD npm run dev
+CMD npm run migrations && npm run dev
