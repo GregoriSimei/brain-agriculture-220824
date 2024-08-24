@@ -10,6 +10,9 @@ export default class City extends BaseModel {
   @column()
   declare name: string
 
+  @column({ columnName: 'state_id' })
+  declare stateId: number
+
   @belongsTo(() => State)
   declare state: BelongsTo<typeof State>
 

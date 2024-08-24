@@ -1,8 +1,10 @@
 import BadRequestException from '#exceptions/bad_request_exception'
 import Farm from '#models/farm'
 import Person from '#models/person'
+import { CityRepository } from '#services/repositories/city_service'
 import { FarmRepository } from '#services/repositories/farm_service'
 import { PersonRepository } from '#services/repositories/person_service'
+import { StateRepository } from '#services/repositories/state_service'
 import { inject } from '@adonisjs/core'
 
 export type CreateFarmUseCaseRequest = {
@@ -10,6 +12,8 @@ export type CreateFarmUseCaseRequest = {
   name: string
   area: number
   vegetationArea: number
+  city: string
+  state: string
 }
 
 export type CreateFarmUseCaseResponse = Farm
@@ -22,7 +26,9 @@ export interface CreateFarmUseCase {
 export class CreateFarmUseCase implements CreateFarmUseCase {
   constructor(
     protected farmRepository: FarmRepository,
-    protected personRepository: PersonRepository
+    protected personRepository: PersonRepository,
+    protected stateRepository: StateRepository,
+    protected cityRepository: CityRepository
   ) {}
 
   async handle({
@@ -30,11 +36,20 @@ export class CreateFarmUseCase implements CreateFarmUseCase {
     cnpj,
     name,
     vegetationArea,
+    city,
+    state,
   }: CreateFarmUseCaseRequest): Promise<CreateFarmUseCaseResponse> {
     if (!this.validateCNPJ(cnpj)) throw new BadRequestException('Invalid CNPJ')
 
-    const foundFarm = await this.farmRepository.findByCNPJ(cnpj)
+    const stateFound = await this.stateRepository.findByName(state)
+    const stateFarm = !stateFound ? await this.stateRepository.create({ name: state }) : stateFound
 
+    const cityFound = await this.cityRepository.findByName(city)
+    const cityFarm = !cityFound
+      ? await this.cityRepository.create({ name: city, stateId: stateFarm.id })
+      : cityFound
+
+    const foundFarm = await this.farmRepository.findByCNPJ(cnpj)
     if (foundFarm) throw new BadRequestException('Farm already exist')
 
     const personToCreate: Partial<Person> = {
@@ -48,6 +63,7 @@ export class CreateFarmUseCase implements CreateFarmUseCase {
       area,
       vegetationArea,
       personId: personCreated.id,
+      cityId: cityFarm.id,
     }
     const farmCreated = await this.farmRepository.create(farmToCreate)
 

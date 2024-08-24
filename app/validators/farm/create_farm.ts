@@ -6,5 +6,7 @@ export const createFarmValidator = vine.compile(
     name: vine.string(),
     area: vine.number(),
     vegetationArea: vine.number(),
+    city: vine.string(),
+    state: vine.string(),
   })
 )

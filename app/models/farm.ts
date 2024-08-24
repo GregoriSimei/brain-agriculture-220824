@@ -28,6 +28,9 @@ export default class Farm extends BaseModel {
   @hasMany(() => Farming)
   declare farmings: HasMany<typeof Farming>
 
+  @column({ columnName: 'city_id' })
+  declare cityId: number
+
   @belongsTo(() => City)
   declare city: BelongsTo<typeof City>
 
