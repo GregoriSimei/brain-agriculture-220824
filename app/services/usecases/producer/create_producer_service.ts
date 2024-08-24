@@ -10,7 +10,7 @@ export type CreateProducerUseCaseRequest = {
   name: string
 }
 
-export type CreateProducerUseCaseResponse = Producer
+export type CreateProducerUseCaseResponse = Partial<Producer> & { name: string; cpf: string }
 
 export interface CreateProducerUseCase {
   handle(request: CreateProducerUseCaseRequest): Promise<CreateProducerUseCaseResponse>
@@ -44,7 +44,11 @@ export class CreateProducerUseCase implements CreateProducerUseCase {
     }
     const producerCreated = await this.producerRepository.create(producerToCreate)
 
-    return producerCreated
+    return {
+      id: producerCreated.id,
+      cpf: createdPerson.document,
+      name: createdPerson.name,
+    }
   }
 
   private validateCPF(cpf: string): boolean {
