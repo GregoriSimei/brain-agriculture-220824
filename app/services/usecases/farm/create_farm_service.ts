@@ -31,7 +31,7 @@ export class CreateFarmUseCase implements CreateFarmUseCase {
     name,
     vegetationArea,
   }: CreateFarmUseCaseRequest): Promise<CreateFarmUseCaseResponse> {
-    if (/^(\d)\1{13}$/.test(cnpj)) throw new BadRequestException('Invalid CNPJ')
+    if (!this.validateCNPJ(cnpj)) throw new BadRequestException('Invalid CNPJ')
 
     const foundFarm = await this.farmRepository.findByCNPJ(cnpj)
 
@@ -52,5 +52,27 @@ export class CreateFarmUseCase implements CreateFarmUseCase {
     const farmCreated = await this.farmRepository.create(farmToCreate)
 
     return farmCreated
+  }
+
+  private validateCNPJ(cnpj: string): boolean {
+    if (/^(\d)\1{13}$/.test(cnpj)) return false
+
+    // Função para calcular o dígito verificador
+    const calculateDigit = (cnpjCode: string, factor: number[]): number => {
+      let sum = 0
+      for (const [i, element] of factor.entries()) {
+        sum += Number.parseInt(cnpjCode.charAt(i)) * element
+      }
+      const result = 11 - (sum % 11)
+      return result > 9 ? 0 : result
+    }
+
+    // Calcula e verifica o primeiro dígito verificador
+    const firstDigit = calculateDigit(cnpj, [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2])
+    if (Number.parseInt(cnpj.charAt(12)) !== firstDigit) return false
+
+    // Calcula e verifica o segundo dígito verificador
+    const secondDigit = calculateDigit(cnpj, [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2])
+    return Number.parseInt(cnpj.charAt(13)) === secondDigit
   }
 }
