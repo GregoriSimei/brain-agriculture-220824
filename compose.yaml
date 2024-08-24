@@ -6,13 +6,21 @@ services:
     volumes:
       - .:/home/node/app
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+        restart: true
 
   db:
     image: postgres:latest
     ports:
-      - "${DB_PORT}:5432"
+      - '${DB_PORT}:5432'
     environment:
       POSTGRES_DB: ${DB_DATABASE}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_USER} -d ${DB_DATABASE}']
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
