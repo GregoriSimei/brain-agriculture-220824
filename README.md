@@ -1,8 +1,8 @@
 # Iniciar a aplicação
-Ja deixei o .env da palicação dentro do próprio repositório. Assim, para execurtar a aplicação basta ter o docker instalado e rodar o comando `docker-compose up`.
+Ja deixei o .env da aplicação dentro do próprio repositório. Assim, para executar a aplicação basta ter o docker instalado e rodar o comando `docker-compose up`.
 Caso não tenha do docker instalado, vai precisar alterar a variável HOST para 127.0.0.1 e a variável DB_HOST para 127.0.0.1.
 
-Na inicialização, deve ter o banco configurado corretamente, pois, como um dos requisitos era criar o mock, eu implementei, na inicialização, um script responsável por popular o banco de dados (desconsiderar, caso tenha o docker instalado e rode o comando `docker-compose up`)
+Na inicialização, deve ter o banco configurado corretamente pois, como um dos requisitos era criar o mock, eu implementei na inicialização, um script responsável por popular o banco de dados (desconsiderar, caso tenha o docker instalado e rode o comando `docker-compose up`)
 
 # Endpoints
 ```
